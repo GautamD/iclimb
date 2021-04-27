@@ -14,3 +14,20 @@ Future<User> fetchUser() async {
     throw Exception('Failed to load user');
   }
 }
+
+Future<User> fetchUserWithMobile(String mobileNo) async {
+  final response = await http.post(
+      Uri.http('3.7.71.29:6001', '/get_user_details'),
+      headers: {"Content-Type": "application/json"},
+      body: json.encode({'mobile': mobileNo}));
+
+  if (response.statusCode == 200) {
+    String message = jsonDecode(response.body)['message'];
+    if (message != 'Success') {
+      throw Exception(message);
+    }
+    return User.fromJson(jsonDecode(response.body));
+  } else {
+    throw Exception('Failed to load user');
+  }
+}
